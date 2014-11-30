@@ -61,7 +61,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
         return False
 
     tree = html.fromstring(req.text)
-    html_tables = tree.xpath('//div[@id="main-res-inner"]/table[1]/tbody')
+    html_tables = tree.xpath('//div[@id="main-res-inner"]/table/tbody')
     routes = []
     
     for table in html_tables:

@@ -19,12 +19,12 @@ class Drive(object):
         self.duration = None
         self.distance = None
 
-        self.vehicles = []
+        self.vehicle = None
 
     def __repr__(self):
         if self.line_change is not None:
             return "[{0}] {1} {2} >> {3} {4} > {5} >> {6} {7} ({8}, {9})" \
-                                    .format(self.vehicles[0],
+                                    .format(self.vehicle,
                                             self.departure.encode("utf-8"),
                                             self.departure_time,
                                             self.line_change.encode("utf-8"),
@@ -36,7 +36,7 @@ class Drive(object):
                                             self.distance)
         else:
             return "[{0}] {1} {2} >> {3} {4} ({5}, {6})" \
-                                    .format(self.vehicles[0],
+                                    .format(self.vehicle,
                                             self.departure.encode("utf-8"),
                                             self.departure_time,
                                             self.dest.encode("utf-8"),
@@ -79,8 +79,8 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
         drive.arrival_time = table.xpath('./tr[' + str(datalen-1) + \
                                             ']/td[4]/text()')[0]
 
-        drive.vehicles.append(table.xpath('./tr[1]/td[7]/img[1]')[0] \
-                                .get('title').replace('Autobus', 'Bus'))
+        drive.vehicle = table.xpath('./tr[1]/td[7]/img[1]')[0] \
+                                .get('title').replace('Autobus', 'Bus')
 
         drive.duration = table.xpath('./tr[' + str(datalen) + \
                                         ']/td[3]/p/strong[1]/text()')[0]

@@ -4,53 +4,41 @@ from lxml import html
 
 CPSK_URL = 'http://cp.atlas.sk/{0}/spojenie/'
 
+
+class Line(object):
+    def __init__(self):
+        self.f = ''
+        self.t = ''
+        self.departure = ''
+        self.arrival = ''
+        self.vehicle = ''
+        self.walk_duration = ''
+
+    def __repr__(self):
+        if self.vehicle == 'Presun':
+            return self.f + '-> ' + self.t  + self.walk_duration
+        return '[' + self.vehicle + '] ' + self.f + ' ' + self.departure \
+                + ' -> ' + self.t + ' ' + self.arrival
+
+
 class Drive(object):
     def __init__(self):
-        self.departure = None
-        self.line_change = None
-        self.dest = None
-
-        self.departure_time = None
-        # lc means line change
-        self.lc_arr_time = None
-        self.lc_dep_time = None
-        self.arrival_time = None
-
         self.duration = None
         self.distance = None
 
-        self.vehicle = None
+        self.lines = []
 
     def __repr__(self):
-        if self.line_change is not None:
-            return "[{0}] {1} {2} >> {3} {4} > {5} >> {6} {7} ({8}, {9})" \
-                                    .format(self.vehicle,
-                                            self.departure.encode("utf-8"),
-                                            self.departure_time,
-                                            self.line_change.encode("utf-8"),
-                                            self.lc_arr_time,
-                                            self.lc_dep_time,
-                                            self.dest.encode("utf-8"),
-                                            self.arrival_time,
-                                            self.duration,
-                                            self.distance)
-        else:
-            return "[{0}] {1} {2} >> {3} {4} ({5}, {6})" \
-                                    .format(self.vehicle,
-                                            self.departure.encode("utf-8"),
-                                            self.departure_time,
-                                            self.dest.encode("utf-8"),
-                                            self.arrival_time,
-                                            self.duration,
-                                            self.distance)
+        return ' >> '.join(map(str,self.lines)) + \
+               ' ({0}, {1})'.format(self.duration, self.distance)
 
 
 def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
     if time == '':
-        time = datetime.datetime.now().strftime("%H:%M")
+        time = datetime.datetime.now().strftime('%H:%M')
 
     if date == '':
-        date = datetime.datetime.now().strftime("%d.%m.%Y")
+        date = datetime.datetime.now().strftime('%d.%m.%Y')
 
     try:
         req = requests.get(CPSK_URL.format(vehicle),
@@ -66,21 +54,22 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
     
     for table in html_tables:
         drive = Drive()
-
         datalen = len(table.xpath('./tr'))
-        if datalen == 4:
-            drive.line_change = table.xpath('./tr[2]/td[3]/text()')[0]
-            drive.lc_arr_time = table.xpath('./tr[2]/td[4]/text()')[0]
-            drive.lc_dep_time = table.xpath('./tr[2]/td[5]/text()')[0]
 
-        drive.departure = table.xpath('./tr[1]/td[3]/text()')[0]
-        drive.dest = table.xpath('./tr[' + str(datalen-1) + ']/td[3]/text()')[0]
-        drive.departure_time = table.xpath('./tr[1]/td[5]/text()')[0]
-        drive.arrival_time = table.xpath('./tr[' + str(datalen-1) + \
-                                            ']/td[4]/text()')[0]
-
-        drive.vehicle = table.xpath('./tr[1]/td[7]/img[1]')[0] \
-                                .get('title').replace('Autobus', 'Bus')
+        for i in range(1, datalen-1):
+            line = Line()
+            trf = './tr[' + str(i) + ']'
+            trt = './tr[' + str(i+1) + ']'
+            line.f = table.xpath(trf + '/td[3]/text()')[0]
+            line.t = table.xpath(trt + '/td[3]/text()')[0]
+            line.departure = table.xpath(trf + '/td[5]/text()')[0]
+            line.arrival = table.xpath(trt + '/td[4]/text()')[0]
+            line.vehicle = table.xpath(trf + '/td[7]/img[1]')[0] \
+                                    .get('title').replace('Autobus', 'Bus')
+            if line.vehicle == 'Presun':
+                line.walk_duration = table.xpath(trf + '/td[7]/text()')[0] \
+                                        .replace('Presun asi ', '')
+            drive.lines.append(line)
 
         drive.duration = table.xpath('./tr[' + str(datalen) + \
                                         ']/td[3]/p/strong[1]/text()')[0]

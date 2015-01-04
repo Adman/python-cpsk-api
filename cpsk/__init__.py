@@ -32,9 +32,9 @@ class Drive(object):
         self.lines = []
 
     def __repr__(self):
-        return (' >> '.join(map(str, self.lines)) +
-                ' ({0}, {1})'.format(self.duration,
-                                     self.distance)).encode('utf-8')
+        return ('{0} ({1}, {2})'.format(' >> '.join(map(str, self.lines)),
+                                        self.duration,
+                                        self.distance)).encode('utf-8')
 
 
 def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):

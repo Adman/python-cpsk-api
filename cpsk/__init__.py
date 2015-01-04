@@ -16,9 +16,12 @@ class Line(object):
 
     def __repr__(self):
         if self.vehicle == 'Presun':
-            return self.f + '-> ' + self.t  + self.walk_duration
-        return '[' + self.vehicle + '] ' + self.f + ' ' + self.departure \
-                + ' -> ' + self.t + ' ' + self.arrival
+            return '{0}-> {1}{2}'.format(self.f, self.t, self.walk_duration)
+        return '[{0}] {1} {2} -> {3} {4}'.format(self.vehicle,
+                                                 self.f,
+                                                 self.departure,
+                                                 self.t,
+                                                 self.arrival)
 
 
 class Drive(object):

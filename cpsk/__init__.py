@@ -85,7 +85,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
             if delay and delay[0] is not u'Aktuálne bez meškania':
                 mins = delay[0].replace(u'Aktuálne meškanie ', '') \
                                .replace(u' minúty', '') \
-                               .replace(u' minúta', '') \
+                               .replace(u' minútu', '') \
                                .replace(u' minút', '')
 
                 minstr = 'minutes' if mins is not '1' else 'minute'

@@ -16,16 +16,18 @@ class Line(object):
         self.vehicle = ''
         self.walk_duration = ''
         self.delay = ''
+        self.platform = ''
 
     def __repr__(self):
         if self.vehicle == 'Presun':
             return '{0}-> {1}{2}'.format(self.f, self.t, self.walk_duration)
-        return '[{0}] {1} {2} -> {3} {4}{5}'.format(self.vehicle,
-                                                    self.f,
-                                                    self.departure,
-                                                    self.t,
-                                                    self.arrival,
-                                                    self.delay)
+        return '[{0}]{1} {2} {3} -> {4} {5}{6}'.format(self.vehicle,
+                                                       self.platform,
+                                                       self.f,
+                                                       self.departure,
+                                                       self.t,
+                                                       self.arrival,
+                                                       self.delay)
 
 
 class Drive(object):
@@ -89,6 +91,14 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
                 minstr = 'minutes' if mins is not '1' else 'minute'
 
                 line.delay = ' ({0} {1} delay)'.format(mins, minstr)
+
+            platform = table.xpath(trf + '/td[6]/span[1]/text()')
+            platform2 = table.xpath(trf + '/td[6]/table/tr[1]/' +
+                                    'td[1]/span[1]/text()')
+            if platform:
+                line.platform = '[{0}]'.format(platform[0])
+            elif platform2:
+                line.platform = '[{0}]'.format(platform2[0])
 
             drive.lines.append(line)
 

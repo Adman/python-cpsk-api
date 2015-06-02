@@ -14,5 +14,6 @@ setup(
     include_package_data=True,
     packages=['cpsk'],
 
-    license="The MIT License (MIT)"
+    license="The MIT License (MIT)",
+    keywords=['travel', 'train', 'bus']
 )

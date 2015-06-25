@@ -104,8 +104,12 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
 
         drive.duration = table.xpath('./tr[' + str(datalen) +
                                      ']/td[3]/p/strong[1]/text()')[0]
-        drive.distance = table.xpath('./tr[' + str(datalen) +
-                                     ']/td[3]/p/strong[2]/text()')[0]
+
+        try:
+            drive.distance = table.xpath('./tr[' + str(datalen) +
+                                         ']/td[3]/p/strong[2]/text()')[0]
+        except IndexError:
+            drive.distance = 'Distance not known'
 
         routes.append(drive)
 

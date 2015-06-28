@@ -17,6 +17,7 @@ class Line(object):
         self.walk_duration = ''
         self.delay = ''
         self.platform = ''
+        self.date = ''
 
     def __repr__(self):
         if self.vehicle == 'Presun':
@@ -66,6 +67,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
         drive = Drive()
         datalen = len(table.xpath('./tr'))
 
+        prevdate = ''
         for i in range(1, datalen-1):
             line = Line()
             trf = './tr[' + str(i) + ']'
@@ -99,6 +101,11 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
                 line.platform = '[{0}]'.format(platform[0])
             elif platform2:
                 line.platform = '[{0}]'.format(platform2[0])
+
+            _date = table.xpath(trf + '/td[2]/text()')[0]
+            if _date is not ' ':
+                prevdate = _date
+            line.date = prevdate
 
             drive.lines.append(line)
 

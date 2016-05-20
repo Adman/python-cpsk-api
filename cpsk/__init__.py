@@ -4,6 +4,12 @@ import requests
 import datetime
 from lxml import html
 
+import sys
+if (sys.version).startswith('2'):
+    reload(sys)
+    sys.setdefaultencoding('utf-8')
+
+
 CPSK_URL = 'http://cp.atlas.sk/{0}/spojenie/'
 
 
@@ -21,14 +27,14 @@ class Line(object):
 
     def __repr__(self):
         if self.vehicle == 'Presun':
-            return '{0}-> {1}{2}'.format(self.f, self.t, self.walk_duration)
-        return '[{0}]{1} {2} {3} -> {4} {5}{6}'.format(self.vehicle,
-                                                       self.platform,
-                                                       self.f,
-                                                       self.departure,
-                                                       self.t,
-                                                       self.arrival,
-                                                       self.delay)
+            return u'{0}-> {1}{2}'.format(self.f, self.t, self.walk_duration)
+        return u'[{0}]{1} {2} {3} -> {4} {5}{6}'.format(self.vehicle,
+                                                        self.platform,
+                                                        self.f,
+                                                        self.departure,
+                                                        self.t,
+                                                        self.arrival,
+                                                        self.delay)
 
 
 class Drive(object):
@@ -39,9 +45,9 @@ class Drive(object):
         self.lines = []
 
     def __repr__(self):
-        return ('{0} ({1}, {2})'.format(' >> '.join(map(str, self.lines)),
-                                        self.duration,
-                                        self.distance)).encode('utf-8')
+        return '{0} ({1}, {2})'.format(' >> '.join(map(str, self.lines)),
+                                       self.duration,
+                                       self.distance)
 
 
 def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):

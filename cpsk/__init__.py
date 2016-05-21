@@ -60,8 +60,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
     try:
         req = requests.get(CPSK_URL.format(vehicle),
                            params={'date': date, 'time': time, 'f': departure,
-                                   't': dest, 'fc': 1, 'tc': 1,
-                                   'submit': 'true'})
+                                   't': dest, 'submit': 'true'})
     except:
         return False
 

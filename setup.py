@@ -6,7 +6,7 @@ setup(
     description='an unofficial api for grabbing data from cp.sk',
     author='Adrian Matejov',
     author_email='a.matejov@centrum.sk',
-    version='0.1.4',
+    version='0.1.5',
 
     url='https://github.com/Adman/python-cpsk-api',
 

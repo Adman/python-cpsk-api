@@ -51,6 +51,15 @@ class Drive(object):
 
 
 def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
+    """Return list of available routes from departure city to destination"""
+
+    def _get_leaf_element(table, path):
+        """Returns leaf element's text in given path"""
+        res = table.xpath(path + '/*[not(*)]')
+        if res:
+            return res[0].text
+        return table.xpath(path + '/text()')[0]
+
     if time == '':
         time = datetime.datetime.now().strftime('%H:%M')
 
@@ -77,10 +86,10 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
             line = Line()
             trf = './tr[' + str(i) + ']'
             trt = './tr[' + str(i+1) + ']'
-            line.f = table.xpath(trf + '/td[3]/text()')[0]
-            line.t = table.xpath(trt + '/td[3]/text()')[0]
-            line.departure = table.xpath(trf + '/td[5]/text()')[0]
-            line.arrival = table.xpath(trt + '/td[4]/text()')[0]
+            line.f = _get_leaf_element(table, trf + '/td[3]')
+            line.t = _get_leaf_element(table, trt + '/td[3]')
+            line.departure = _get_leaf_element(table, trf + '/td[5]')
+            line.arrival = _get_leaf_element(table, trt + '/td[4]')
             line.vehicle = table.xpath(trf + '/td[7]/img[1]')[0] \
                                 .get('title').replace('Autobus', 'Bus')
             if line.vehicle == 'Presun':

@@ -1,4 +1,4 @@
-python-cpsk-api
+python-cpsk-api ![travis](https://travis-ci.org/Adman/python-cpsk-api.svg?branch=master)
 ===============
 
 Simple python api for grabbing data from cp.sk

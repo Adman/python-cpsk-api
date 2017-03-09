@@ -94,7 +94,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
                                 .get('title').replace('Autobus', 'Bus')
             if line.vehicle == 'Presun':
                 line.walk_duration = table.xpath(trf + '/td[7]/text()')[0] \
-                                        .replace('Presun asi ', '')
+                    .replace('Presun asi ', '')
 
             delay = table.xpath(trf + '/td[7]/div[1]/' +
                                 'span[@class!="nodelay"]/text()')

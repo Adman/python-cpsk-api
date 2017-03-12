@@ -7,4 +7,3 @@ script:
   - flake8 --ignore=E731,E226 .
 notifications:
   email: false
-

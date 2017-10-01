@@ -10,7 +10,7 @@ if (sys.version).startswith('2'):
     sys.setdefaultencoding('utf-8')
 
 
-CPSK_URL = 'http://cp.atlas.sk/{0}/spojenie/'
+CPSK_URL = 'http://cp.hnonline.sk/{0}/spojenie/'
 
 
 class Line(object):

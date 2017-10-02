@@ -6,7 +6,7 @@ Simple python api for grabbing data from cp.sk
 Installation
 ------------
 
-Available on [pypi](https://pypi.python.org/pypi/cpsk/)
+Available on [pypi](https://pypi.org/project/cpsk/)
 
 Running `$ pip install cpsk` will get the package installed
 

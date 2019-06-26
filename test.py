@@ -14,7 +14,7 @@ for b in bus_routes:
 
 print()
 
-bus_routes_direct = cpsk.get_routes('Zilina', 'Poprad', vehicle='bus', direct='true')
+bus_routes_direct = cpsk.get_routes('Zilina', 'Poprad', vehicle='bus', direct=True)
 print('Looking for bus lines')
 for b in bus_routes_direct:
     print(b)

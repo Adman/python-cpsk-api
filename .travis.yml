@@ -4,6 +4,6 @@ python:
 install:
   - pip install flake8
 script:
-  - flake8 --ignore=E731,E226 .
+  - flake8 --ignore=E731,E226,W504 .
 notifications:
   email: false

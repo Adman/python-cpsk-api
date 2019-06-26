@@ -50,7 +50,8 @@ class Drive(object):
                                        self.distance)
 
 
-def get_routes(departure, dest, vehicle='vlakbus', time='', date='', direct=False):
+def get_routes(departure, dest, vehicle='vlakbus', time='', date='',
+               direct=False):
     """Return list of available routes from departure city to destination"""
 
     def _get_leaf_element(table, path):
@@ -69,8 +70,9 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date='', direct=Fals
     try:
         req = requests.get(CPSK_URL.format(vehicle),
                            params={'date': date, 'time': time, 'f': departure,
-                                   't': dest, 'submit': 'true', 'direct': "true" if direct else "false"})
-    except:
+                                   't': dest, 'submit': 'true',
+                                   'direct': 'true' if direct else 'false'})
+    except Exception:
         return False
 
     tree = html.fromstring(req.text)
@@ -98,13 +100,13 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date='', direct=Fals
 
             delay = table.xpath(trf + '/td[7]/div[1]/' +
                                 'span[@class!="nodelay"]/text()')
-            if delay and delay[0] is not u'Aktuálne bez meškania':
+            if delay and delay[0] != u'Aktuálne bez meškania':
                 mins = delay[0].replace(u'Aktuálne meškanie ', '') \
                                .replace(u' minúty', '') \
                                .replace(u' minútu', '') \
                                .replace(u' minút', '')
 
-                minstr = 'minutes' if mins is not '1' else 'minute'
+                minstr = 'minutes' if mins != '1' else 'minute'
 
                 line.delay = ' ({0} {1} delay)'.format(mins, minstr)
 
@@ -117,7 +119,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date='', direct=Fals
                 line.platform = '[{0}]'.format(platform2[0])
 
             _date = table.xpath(trf + '/td[2]/text()')[0]
-            if _date is not ' ':
+            if _date != ' ':
                 prevdate = _date
             line.date = prevdate
 

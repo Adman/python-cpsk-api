@@ -50,7 +50,7 @@ class Drive(object):
                                        self.distance)
 
 
-def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
+def get_routes(departure, dest, vehicle='vlakbus', time='', date='', direct=False):
     """Return list of available routes from departure city to destination"""
 
     def _get_leaf_element(table, path):
@@ -69,7 +69,7 @@ def get_routes(departure, dest, vehicle='vlakbus', time='', date=''):
     try:
         req = requests.get(CPSK_URL.format(vehicle),
                            params={'date': date, 'time': time, 'f': departure,
-                                   't': dest, 'submit': 'true'})
+                                   't': dest, 'submit': 'true', 'direct': "true" if direct else "false"})
     except:
         return False
 

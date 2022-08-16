@@ -34,3 +34,11 @@ inter_routes = cpsk.get_routes('Brno', 'BA', vehicle='vlak')
 print('Looking for international lines')
 for ir in inter_routes:
     print(ir)
+
+print()
+
+mhds = cpsk.get_routes('Zochova', 'Molecova', vehicle='mhd')
+print('Looking for public city transport')
+for mhd in mhds:
+    print(mhd)
+

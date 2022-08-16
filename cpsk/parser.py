@@ -94,20 +94,20 @@ def get_routes(
 
             departure_info = from_html.xpath('p')
             line.departure = departure_info[0].text
-            line.f = departure_info[1].xpath('strong[@class="name"]')[0].text
+            line.f = departure_info[1].xpath('strong[contains(@class, "name")]')[0].text
             platform = departure_info[1].xpath('span/span')
             if platform:
                 line.platform = platform[0].text
 
             arrival_info = to_html.xpath('p')
             line.arrival = arrival_info[0].text
-            line.t = arrival_info[1].xpath('strong[@class="name"]')[0].text
+            line.t = arrival_info[1].xpath('strong[contains(@class, "name")]')[0].text
 
             vehicle_info = html_line.xpath('a[@class="title"]/div/div')[0]
             line.vehicle_id = vehicle_info.xpath('h3/span')[0].text
             line.vehicle = _get_vehicle_type(vehicle_info.xpath('img')[0].attrib['alt'])
 
-            delay_info = html_line.xpath('span/a[@class="delay-bubble"]')
+            delay_info = html_line.xpath('span/a[contains(@class, "delay-bubble")]')
             if delay_info:
                 delay = delay_info[0].text
                 if delay != 'Aktuálne bez meškania':

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.2.1
+
 * [#9](https://github.com/Adman/python-cpsk-api/pull/9) - Fix exception - other classes on xpath elements
 
 ## 0.2.0

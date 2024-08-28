@@ -1,25 +1,28 @@
+from .enums import UsualDeparture, Vehicle
+
+
 class Line:
     def __init__(self):
         self.f: str = ''
         self.t: str = ''
         self.departure: str = ''
         self.arrival: str = ''
-        self.vehicle: str = ''
+        self.vehicle: Vehicle = None
         self.vehicle_id: str = ''
         self.walk_duration: str = ''
         self.delay: str = ''
         self.platform: str = ''
         self.date: str = ''
-        self.is_walk: bool = False
+        self.usual_departure: UsualDeparture = None
 
     def __repr__(self):
-        if self.is_walk:
-            return u'[Walk] {0}'.format(self.walk_duration)
+        if self.vehicle == Vehicle.WALK:
+            return '[WALK] {0}'.format(self.walk_duration)
 
         delay = ' ({0} delay)'.format(self.delay) if self.delay else ''
         platform = f' {self.platform}' if self.platform else ''
 
-        return u'[{0} {1}]{2} {3} {4} -> {5} {6}{7}'.format(
+        return '[{0} {1}]{2} {3} {4} -> {5} {6}{7}'.format(
             self.vehicle,
             self.vehicle_id,
             platform,

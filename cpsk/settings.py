@@ -1,1 +1,1 @@
-CPSK_URL = 'https://cp.hnonline.sk/{0}/spojenie/vysledky/'
+CPSK_URL = 'https://cp.sk/{0}/spojenie/vysledky/'

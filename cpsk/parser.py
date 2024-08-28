@@ -5,19 +5,19 @@ import requests
 from lxml import html
 
 from .drive import Drive
+from .enums import UsualDeparture, Vehicle
 from .line import Line
 from .settings import CPSK_URL
 
 
-def _get_vehicle_type(vehicle: str) -> str:
-    if 'vlak' in vehicle:
-        return 'Train'
-    elif 'rýchlik' in vehicle:
-        return 'Fast Train'
-    elif 'autobus' in vehicle:
-        return 'Bus'
-    else:
-        return vehicle
+def _get_vehicle_type(vehicle_string: str) -> Vehicle:
+    if vehicle_string == "÷":
+        return Vehicle.BUS
+    elif vehicle_string == "û":
+        return Vehicle.TRAIN
+    elif vehicle_string == "ü":
+        return Vehicle.TRAM
+    return Vehicle.UNKNOWN
 
 
 def get_routes(
@@ -86,7 +86,7 @@ def get_routes(
             if walk_info:
                 walk_text = walk_info[0].text_content().strip()
                 walk_line = Line()
-                walk_line.is_walk = True
+                walk_line.vehicle = Vehicle.WALK
                 walk_line.walk_duration = walk_text.replace('Presun asi ', '')
                 drive.lines.append(walk_line)
 
@@ -105,12 +105,16 @@ def get_routes(
 
             vehicle_info = html_line.xpath('a[@class="title"]/div/div')[0]
             line.vehicle_id = vehicle_info.xpath('h3/span')[0].text
-            line.vehicle = _get_vehicle_type(vehicle_info.xpath('img')[0].attrib['alt'])
+            line.vehicle = _get_vehicle_type(vehicle_info.xpath('span')[0].text)
 
             delay_info = html_line.xpath('span/a[contains(@class, "delay-bubble")]')
             if delay_info:
                 delay = delay_info[0].text
-                if delay != 'Aktuálne bez meškania':
+                if 'býva oneskorený' in delay:
+                    line.usual_departure = UsualDeparture.DELAYED
+                elif 'býva načas' in delay:
+                    line.usual_departure = UsualDeparture.ON_TIME
+                elif delay != 'Aktuálne bez meškania':
                     mins = delay.replace(
                         'Aktuálne meškanie ', ''
                     ).replace(

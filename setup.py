@@ -11,7 +11,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Adrian Matejov',
     author_email='a.matejov@centrum.sk',
-    version='0.2.1',
+    version='0.2.2',
     url='https://github.com/Adman/python-cpsk-api',
     install_requires=['requests', 'lxml'],
     include_package_data=True,

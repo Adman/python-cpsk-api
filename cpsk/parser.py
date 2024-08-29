@@ -23,7 +23,7 @@ def _get_vehicle_type(vehicle_string: str) -> Vehicle:
 def get_routes(
     departure: str,
     destination: str,
-    vehicle: str ='vlakbus',
+    vehicle: str = "vlakbus",
     time: Optional[str] = None,
     date: Optional[str] = None,
     direct: bool = False,
@@ -44,18 +44,21 @@ def get_routes(
     """
 
     if time is not None:
-        time = datetime.datetime.now().strftime('%H:%M')
+        time = datetime.datetime.now().strftime("%H:%M")
 
     if date is not None:
-        date = datetime.datetime.now().strftime('%d.%m.%Y')
+        date = datetime.datetime.now().strftime("%d.%m.%Y")
 
     req = requests.get(
         CPSK_URL.format(vehicle),
         params={
-            'date': date, 'time': time, 'f': departure,
-            't': destination, 'submit': 'true',
-            'direct': 'true' if direct else 'false',
-        }
+            "date": date,
+            "time": time,
+            "f": departure,
+            "t": destination,
+            "submit": "true",
+            "direct": "true" if direct else "false",
+        },
     )
 
     tree = html.fromstring(req.text)
@@ -75,10 +78,10 @@ def get_routes(
         try:
             drive.distance = drive_info[1].text
         except IndexError:
-            drive.distance = 'Distance unknown'
+            drive.distance = "Distance unknown"
 
         conn_details = conn.xpath('div[@class="connection-details "]')[0]
-        html_lines = conn_details.xpath('div/div')
+        html_lines = conn_details.xpath("div/div")
 
         for html_line in html_lines:
             line = Line()
@@ -87,45 +90,41 @@ def get_routes(
                 walk_text = walk_info[0].text_content().strip()
                 walk_line = Line()
                 walk_line.vehicle = Vehicle.WALK
-                walk_line.walk_duration = walk_text.replace('Presun asi ', '')
+                walk_line.walk_duration = walk_text.replace("Presun asi ", "")
                 drive.lines.append(walk_line)
 
-            from_html, to_html = html_line.xpath('ul/li')
+            from_html, to_html = html_line.xpath("ul/li")
 
-            departure_info = from_html.xpath('p')
+            departure_info = from_html.xpath("p")
             line.departure = departure_info[0].text
             line.f = departure_info[1].xpath('strong[contains(@class, "name")]')[0].text
-            platform = departure_info[1].xpath('span/span')
+            platform = departure_info[1].xpath("span/span")
             if platform:
                 line.platform = platform[0].text
 
-            arrival_info = to_html.xpath('p')
+            arrival_info = to_html.xpath("p")
             line.arrival = arrival_info[0].text
             line.t = arrival_info[1].xpath('strong[contains(@class, "name")]')[0].text
 
             vehicle_info = html_line.xpath('a[@class="title"]/div/div')[0]
-            line.vehicle_id = vehicle_info.xpath('h3/span')[0].text
-            line.vehicle = _get_vehicle_type(vehicle_info.xpath('span')[0].text)
+            line.vehicle_id = vehicle_info.xpath("h3/span")[0].text
+            line.vehicle = _get_vehicle_type(vehicle_info.xpath("span")[0].text)
 
             delay_info = html_line.xpath('span/a[contains(@class, "delay-bubble")]')
             if delay_info:
-                delay = delay_info[0].text
-                if 'býva oneskorený' in delay:
+                delay = delay_info[0].text.strip()
+                if "býva oneskorený" in delay:
                     line.usual_departure = UsualDeparture.DELAYED
-                elif 'býva načas' in delay:
+                elif "býva načas" in delay:
                     line.usual_departure = UsualDeparture.ON_TIME
-                elif delay != 'Aktuálne bez meškania':
-                    mins = delay.replace(
-                        'Aktuálne meškanie ', ''
-                    ).replace(
-                        ' minúty', ''
-                    ).replace(
-                        ' minútu', ''
-                    ).replace(
-                        ' minút', ''
+                elif "Aktuálne meškanie" in delay:
+                    mins = (
+                        delay.replace("Aktuálne meškanie ", "")
+                        .replace(" minúty", "")
+                        .replace(" minútu", "")
+                        .replace(" minút", "")
                     )
-                    minstr = 'mins' if mins != '1' else 'min'
-                    line.delay = '{0} {1}'.format(mins, minstr)
+                    line.delay_mins = int(mins)
 
             drive.lines.append(line)
 

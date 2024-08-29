@@ -1,5 +1,6 @@
 from enum import StrEnum
 
+
 class Vehicle(StrEnum):
     BUS = "BUS"
     TRAIN = "TRAIN"
@@ -11,4 +12,3 @@ class Vehicle(StrEnum):
 class UsualDeparture(StrEnum):
     ON_TIME = "ON TIME"
     DELAYED = "DELAYED"
-

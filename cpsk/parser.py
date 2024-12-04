@@ -122,6 +122,7 @@ def get_routes(
                         delay.replace("Aktuálne meškanie ", "")
                         .replace(" minúty", "")
                         .replace(" minútu", "")
+                        .replace(" minúta", "")
                         .replace(" minút", "")
                     )
                     line.delay_mins = int(mins)
